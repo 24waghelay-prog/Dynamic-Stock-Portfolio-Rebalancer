@@ -92,52 +92,52 @@ def backtracking_selection(stocks, budget):
 # =====================
 
 st.set_page_config(page_title="Hybrid Stock Portfolio Optimizer", layout="wide")
-st.title("📈 Dynamic Stock Portfolio Rebalancer (Greedy + DP + Backtracking)")
+st.title("Dynamic Stock Portfolio Rebalancer (Greedy + DP + Backtracking)")
 
 st.markdown("""
 Upload a CSV file with **Stock**, **Price**, and **ExpectedReturn** columns.  
 The system automatically finds the best combination using:
-- ⚡ Greedy Fractional Algorithm  
-- 🧠 Dynamic Programming (0/1 Knapsack)  
-- 🔍 Backtracking Exhaustive Search  
+-  Greedy Fractional Algorithm  
+- Dynamic Programming (0/1 Knapsack)  
+- Backtracking Exhaustive Search  
 """)
 
-uploaded_file = st.file_uploader("📁 Upload your stock dataset (CSV file)", type=["csv"])
-budget = st.number_input("💰 Enter your total investment budget ($):", value=5000, min_value=100)
+uploaded_file = st.file_uploader("Upload your stock dataset (CSV file)", type=["csv"])
+budget = st.number_input("Enter your total investment budget ($):", value=5000, min_value=100)
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     required_columns = {"Stock", "Price", "ExpectedReturn"}
 
     if not required_columns.issubset(df.columns):
-        st.error("❌ CSV must contain 'Stock', 'Price', and 'ExpectedReturn' columns.")
+        st.error(" CSV must contain 'Stock', 'Price', and 'ExpectedReturn' columns.")
     else:
         stocks = [tuple(x) for x in df[["Stock", "Price", "ExpectedReturn"]].values]
-        st.write("### ✅ Loaded Stocks:")
+        st.write("###  Loaded Stocks:")
         st.dataframe(df)
 
-        if st.button("🚀 Run Hybrid Optimization"):
+        if st.button(" Run Hybrid Optimization"):
             # Greedy Algorithm
             greedy_sel, greedy_cost, greedy_ret = greedy_fractional(stocks, budget)
-            st.subheader("⚡ Greedy (Fractional) Solution")
+            st.subheader("Greedy (Fractional) Solution")
             st.dataframe(pd.DataFrame(greedy_sel, columns=["Stock", "Invested ($)", "Expected Return"]))
             st.info(f"**Total Cost:** ${greedy_cost:.2f} | **Total Expected Return:** {greedy_ret:.2f}")
 
             # Dynamic Programming
             dp_sel, dp_cost, dp_ret = dp_knapsack(stocks, budget)
-            st.subheader("🧠 Dynamic Programming (0/1 Knapsack) Solution")
+            st.subheader("Dynamic Programming (0/1 Knapsack) Solution")
             st.dataframe(pd.DataFrame(dp_sel, columns=["Stock", "Invested ($)", "Expected Return"]))
             st.info(f"**Total Cost:** ${dp_cost:.2f} | **Total Expected Return:** {dp_ret:.2f}")
 
             # Backtracking (Exhaustive Search)
             bt_sel, bt_cost, bt_ret = backtracking_selection(stocks, budget)
-            st.subheader("🔍 Backtracking (Optimal) Solution")
+            st.subheader(" Backtracking (Optimal) Solution")
             st.dataframe(pd.DataFrame(bt_sel, columns=["Stock", "Invested ($)", "Expected Return"]))
             st.success(f"**Optimal Total Cost:** ${bt_cost:.2f} | **Optimal Total Return:** {bt_ret:.2f}")
 
             # Comparison Summary
             st.markdown("---")
-            st.subheader("📊 Comparison Summary")
+            st.subheader(" Comparison Summary")
             comparison_df = pd.DataFrame({
                 "Algorithm": ["Greedy", "Dynamic Programming", "Backtracking (Optimal)"],
                 "Total Cost ($)": [round(greedy_cost, 2), round(dp_cost, 2), round(bt_cost, 2)],
@@ -153,4 +153,4 @@ if uploaded_file:
             ax.set_title("Algorithm Performance Comparison")
             st.pyplot(fig)
 else:
-    st.info("📥 Please upload a CSV file to begin.")
+    st.info("Please upload a CSV file to begin.")
